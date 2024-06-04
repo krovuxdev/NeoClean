@@ -2,7 +2,7 @@ return {
   "nvim-telescope/telescope.nvim",
   event = "VeryLazy",
   cmd = { "Telescope" },
-  dependencies = { "nvim-lua/plenary.nvim" },
+  dependencies = { "plenary" },
   config = function(_, opts)
     vim.api.nvim_create_autocmd("User", {
       pattern = "TelescopePreviewerLoaded",
@@ -108,6 +108,14 @@ return {
       "<leader>C/",
       function()
         require("telescope.builtin").live_grep({ cwd = vim.fn.stdpath("config") })
+      end,
+      desc = "Find Config",
+    },
+    -- DO.not
+    {
+      "<leader>W/",
+      function()
+        require("telescope.builtin").grep_string({ search = vim.fn.expand("<cWORD>") })
       end,
       desc = "Find Config",
     },
