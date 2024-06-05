@@ -1,10 +1,47 @@
 ---@diagnostic disable: missing-fields
+function slice(tbl, start, finish, step)
+  local sliced = {}
+  for i = start, finish, step or 1 do
+    table.insert(sliced, tbl[i])
+  end
+  return sliced
+end
+
+_G.filter_enabled = false
+_G.name_cmp = {
+  { name = "nvim_lsp" },
+  { name = "buffer",  max_item_count = 5 },
+  { name = "copilot" },
+  { name = "path",    max_item_count = 3 },
+  { name = "luasnip", max_item_count = 3 },
+}
+function ToggleFilter()
+  local cmp = require("cmp")
+
+  if _G.filter_enabled then
+    cmp.setup({
+      sources = cmp.config.sources({
+        unpack(_G.name_cmp),
+      }),
+    })
+    print("Filtro activado [WORD-CMP]")
+  else
+    cmp.setup({
+      sources = cmp.config.sources({
+        {
+          name = "nvim_lsp",
+          entry_filter = function(entry, ctx)
+            return require("cmp").lsp.CompletionItemKind.Text ~= entry:get_kind()
+          end,
+        },
+        unpack(slice(_G.name_cmp, 2, 5)),
+      }),
+    })
+  end
+  _G.filter_enabled = not _G.filter_enabled
+end
 
 return {
-  {
-    "L3MON4D3/LuaSnip",
-    version = "v2.3",
-  },
   {
     "hrsh7th/nvim-cmp",
     event = { "BufReadPost", "BufNewFile" },
@@ -19,16 +56,8 @@ return {
       "onsails/lspkind.nvim",
       "windwp/nvim-ts-autotag",
       "windwp/nvim-autopairs",
+      "tpope/vim-surround",
       "rafamadriz/friendly-snippets",
-      {
-        "Saecki/crates.nvim",
-        event = { "BufRead Cargo.toml" },
-        opt = {
-          completion = {
-            cmp = { enabled = true },
-          },
-        },
-      },
       {
         "L3MON4D3/LuaSnip",
         version = "v2.3",
@@ -64,7 +93,7 @@ return {
               fallback()
             end
           end, { "i", "s" }),
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
+          ["<s-tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
@@ -73,19 +102,16 @@ return {
               fallback()
             end
           end, { "i", "s" }),
-          ["<C-u>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-d>"] = cmp.mapping.scroll_docs(4),
-          ["<C-Space>"] = cmp.mapping.complete({}),
-          ["<C-c>"] = cmp.mapping.abort(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<c-u>"] = cmp.mapping.scroll_docs(-4),
+          ["<c-d>"] = cmp.mapping.scroll_docs(4),
+          ["<c-space>"] = cmp.mapping.complete({}),
+          ["<c-c>"] = cmp.mapping.abort(),
+          ["<cr>"] = cmp.mapping.confirm({ select = true }),
         }),
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" }, -- lsp
-          { name = "buffer", max_item_count = 5 },
-          { name = "copilot" },
-          { name = "path", max_item_count = 3 },
-          { name = "luasnip", max_item_count = 3 },
-        }),
+        -- sources = cmp.config.sources({
+        --   unpack(_G.name_cmp),
+        -- }),
+        sources = ToggleFilter(),
         formatting = {
           expandable_indicator = true,
           format = lspkind.cmp_format({
@@ -102,5 +128,15 @@ return {
         },
       })
     end,
+    keys = {
+      {
+        "<leader>t",
+        function()
+          print("Filtro desactivado [WORD-CMP]")
+          ToggleFilter()
+        end,
+        desc = "Toggle Text Filter",
+      },
+    },
   },
 }
