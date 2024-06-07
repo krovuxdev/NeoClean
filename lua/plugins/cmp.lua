@@ -1,4 +1,3 @@
----@diagnostic disable: missing-fields
 function slice(tbl, start, finish, step)
   local sliced = {}
   for i = start, finish, step or 1 do
@@ -10,14 +9,14 @@ end
 _G.filter_enabled = false
 _G.name_cmp = {
   { name = "nvim_lsp" },
-  { name = "buffer",  max_item_count = 5 },
+  { name = "buffer" },
   { name = "copilot" },
-  { name = "path",    max_item_count = 3 },
-  { name = "luasnip", max_item_count = 3 },
+  { name = "path" },
+  { name = "luasnip" },
 }
 function ToggleFilter()
   local cmp = require("cmp")
-
+  vim.notify = require("notify")
   if _G.filter_enabled then
     cmp.setup({
       sources = cmp.config.sources({
@@ -49,28 +48,21 @@ return {
       -- CMP
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
-      "hrsh7th/cmp-emoji",
       "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-cmdline",
       "saadparwaiz1/cmp_luasnip",
       --
       "onsails/lspkind.nvim",
       "windwp/nvim-ts-autotag",
       "windwp/nvim-autopairs",
       "tpope/vim-surround",
-      "rafamadriz/friendly-snippets",
-      {
-        "L3MON4D3/LuaSnip",
-        version = "v2.3",
-      },
+      "Luasnip",
     },
     config = function()
-      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
       local cmp = require("cmp")
       local luasnip = require("luasnip")
       local lspkind = require("lspkind")
       require("nvim-autopairs").setup()
-      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
-      require("luasnip.loaders.from_vscode").lazy_load()
       cmp.setup({
         snippet = {
           expand = function(args)
@@ -82,28 +74,8 @@ return {
           documentation = cmp.config.window.bordered(),
         },
         mapping = cmp.mapping.preset.insert({
-          ["<C-k>"] = cmp.mapping.select_prev_item(),
-          ["<C-j>"] = cmp.mapping.select_next_item(),
-          ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-          ["<s-tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-          ["<c-u>"] = cmp.mapping.scroll_docs(-4),
-          ["<c-d>"] = cmp.mapping.scroll_docs(4),
+          ["<Tab>"] = cmp.mapping.select_next_item(),
+          ["<s-tab>"] = cmp.mapping.select_prev_item(),
           ["<c-space>"] = cmp.mapping.complete({}),
           ["<c-c>"] = cmp.mapping.abort(),
           ["<cr>"] = cmp.mapping.confirm({ select = true }),
