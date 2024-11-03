@@ -1,12 +1,10 @@
 return {
-  -- add gruvbox
-  {
-    "ellisonleao/gruvbox.nvim",
-    dependencies = {
-      "DeviusVim/deviuspro.nvim",
-    },
-    config = function()
-      vim.cmd.colorscheme("gruvbox")
-    end,
+  "sainnhe/gruvbox-material",
+  dependencies = {
+    "DeviusVim/deviuspro.nvim",
   },
+  noice = false,
+  config = function()
+    vim.cmd.colorscheme("gruvbox-material")
+  end,
 }
