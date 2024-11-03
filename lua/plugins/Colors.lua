@@ -1,10 +1,9 @@
 return {
   "echasnovski/mini.hipatterns",
-  -- event = "BufReadPre",
   opts = {},
   config = function()
     local hipatterns = require("mini.hipatterns")
-    require("mini.hipatterns").setup({
+    hipatterns.setup({
       highlighters = {
         -- Highlight standalone 'FIX', 'HACK', 'TODO', 'NOTE'
         fix = { pattern = "%f[%w]()FIX()%f[%W]", group = "MiniHipatternsFixme" },
