@@ -68,13 +68,20 @@ return {
       end,
       desc = "Find Config",
     },
-    -- HACK: Grep
     {
       "<leader>c/",
       function()
         require("telescope.builtin").live_grep({ cwd = vim.fn.stdpath("config"), additional_args = { "-u" } })
       end,
       desc = "Grep Config",
+    },
+    -- HACK: Grep
+    {
+      "<leader>/",
+      function()
+        require("telescope.builtin").live_grep()
+      end,
+      desc = "Grep (Root Dir)",
     },
     {
       "<leader>sW",
