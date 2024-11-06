@@ -1,7 +1,7 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
   branch = "v3.x",
-  event = "VeryLazy",
+  -- event = "VeryLazy",
   cmd = "Neotree",
   keys = {
     { "<leader>e", ":Neotree toggle<CR>", silent = true, desc = "File Explorer", remap = true },
