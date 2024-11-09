@@ -1,26 +1,16 @@
 return {
-  "jose-elias-alvarez/null-ls.nvim",
-  config = function()
-    local null_ls = require("null-ls")
-    local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-    null_ls.setup({
-      on_attach = function(client, bufnr)
-        if client.supports_method("textDocument/formatting") then
-          vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            group = augroup,
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format()
-            end,
-          })
-        end
-      end,
-      sources = {
-        null_ls.builtins.formatting.stylua,
-        null_ls.builtins.diagnostics.eslint,
-        null_ls.builtins.completion.spell,
-      },
-    })
-  end,
+	"stevearc/conform.nvim",
+	---@module "conform"
+	---@type conform.setupOpts
+	opts = {
+		formatters_by_ft = {
+			lua = { "stylua" },
+			-- Conform will run multiple formatters sequentially
+			python = { "isort", "black" },
+			-- You can customize some of the format options for the filetype (:help conform.format)
+			rust = { "rustfmt", lsp_format = "fallback" },
+			-- Conform will run the first available formatter
+			javascript = { "prettierd", "prettier", stop_after_first = true },
+		},
+	},
 }
