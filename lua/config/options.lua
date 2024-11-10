@@ -64,7 +64,7 @@ vim.diagnostic.config({
 ------------------------------------------------------------------------------
 require("config.statuscolumn").setup({
 	mode = "hybrid",
-	iconRelnum = " ",
+	iconRelnum = "",
 	base16 = {
 		base00 = "#fbf1c7",
 		base01 = "#e9d5a4",
