@@ -4,4 +4,4 @@
 -- ║             ┛┗┗ ┗┛┗┛┗┗ ┗┻┛┗           ║
 -- ╚═══════════════════════════════════════╝
 --               by Krovuxdev
-require("utils.loaders").setup("config")
+require("utils.loaders").setup("config", "Lazy")
