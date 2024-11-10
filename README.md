@@ -6,7 +6,7 @@
 Requirements Install: ripgrep and nerdfonts
 # Install
 ```bash
-mv ~/.config/nvim{,.bak} | rm -rf  ~/.local/share/nvim | ~/.local/state/nvim
+mv ~/.config/nvim{,.bak} | rm -rf  ~/.local/share/nvim | rm -rf ~/.local/state/nvim
 git clone --depth 1 https://github.com/krovuxdev/NeoClean.git ~/.config/nvim | rm -rf ~/.config/nvim/.git
 ```
 # Uninstall
