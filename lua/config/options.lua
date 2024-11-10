@@ -1,7 +1,5 @@
 local diagnostic_icons = require("config").icons.diagnostics
-
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+------------------------------------------------------------------------------
 vim.scriptencoding = "utf-8"
 vim.opt.encoding = "utf-8"
 vim.opt.fileencoding = "utf-8"
@@ -12,7 +10,7 @@ vim.opt.confirm = true
 vim.opt.title = true
 vim.opt.autoindent = true
 vim.opt.smartindent = true
-
+------------------------------------------------------------------------------
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.undofile = true
@@ -30,14 +28,14 @@ vim.opt.backspace = { "start", "eol", "indent" }
 vim.opt.wildignore:append({ "*/node_modules/*" })
 vim.opt.breakindent = true
 vim.opt.clipboard = "unnamedplus"
-
+------------------------------------------------------------------------------
 vim.o.complete = "."
 vim.o.completeopt = "menu,menuone,noselect"
-
+------------------------------------------------------------------------------
 vim.opt.signcolumn = "yes"
 vim.g.autoformat = true
 vim.opt.wrap = false
-
+------------------------------------------------------------------------------
 vim.diagnostic.config({
 	signs = {
 		text = {
@@ -63,8 +61,7 @@ vim.diagnostic.config({
 		-- prefix = "●",
 	},
 })
-
---
+------------------------------------------------------------------------------
 require("config.statuscolumn").setup({
 	mode = "hybrid",
 	iconRelnum = " ",
@@ -84,3 +81,9 @@ require("config.statuscolumn").setup({
 	},
 	-- textr = "│",
 })
+------------------------------------------------------------------------------
+vim.api.nvim_set_hl(0, "FloatBorder", { link = "Normal" })
+vim.api.nvim_set_hl(0, "LspInfoBorder", { link = "Normal" })
+vim.api.nvim_set_hl(0, "NormalFloat", { link = "Normal" })
+vim.api.nvim_set_hl(0, "BlinkCmpGhostText", { link = "Comment" })
+vim.cmd("highlight Winbar guibg=none")
