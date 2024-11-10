@@ -1,19 +1,21 @@
 local M = {}
 M.on_attach = function(client, bufnr)
-	local function map(mode, l, r, noremap, silent, desc)
-		vim.keymap.set(mode, l, r, {
-			noremap = noremap or true,
-			silent = silent or true,
-			buffer = bufnr,
-			desc = desc,
-		})
+	local dg = vim.diagnostic
+	local bf = vim.lsp.buf
+	local opts = {
+		noremap = true,
+		silent = true,
+		buffer = bufnr,
+		desc = "?",
+	}
+	local function map(mode, l, r, _opts)
+		local _ = vim.tbl_extend("force", opts, _opts or {})
+		vim.keymap.set(mode, l, r, _)
 	end
+
 	map("n", "<Leader>h", function()
 		vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-	end, { noremap = true, silent = true, desc = "Toggle Inlay_hints (HINTS)" })
-	if client.server_capabilities.inlayHintProvider then
-		vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-	end
+	end, { desc = "Toggle Inlay_hints (HINTS)" })
 	map("n", "<Leader>ck", function()
 		local found_float = false
 		vim.lsp.buf.hover()
@@ -27,17 +29,19 @@ M.on_attach = function(client, bufnr)
 		if found_float then
 			return
 		end
-	end, { buffer = bufnr, desc = "Hover actions (CodeLens)" })
-	map("n", "<Leader>[", function()
-		local params = { context = { only = { "quickfix", "refactor" } } }
-		vim.lsp.buf.code_action(params)
-	end, { buffer = bufnr, desc = "Code actions (CodeLens)" })
-	map("n", "]d", function()
-		vim.diagnostic.goto_next()
-	end, { buffer = bufnr, desc = "Code actions (CodeLens)" })
-	map("n", "[d", function()
-		vim.diagnostic.goto_prev()
-	end, { buffer = bufnr, desc = "Code actions (CodeLens)" })
+	end, { desc = "Hover actions (CodeLens)" })
+	map(
+		"n",
+		"<Leader>{",
+		":vsplit | lua vim.lsp.buf.definition()",
+		{ desc = "Go To definition" }
+	)
+
+	map("n", "<Leader>[", bf.code_action, {
+		desc = "Code actions (CodeLens)",
+	})
+	map("n", "]d", dg.goto_next, { desc = "Code actions (CodeLens)" })
+	map("n", "[d", dg.goto_prev, { desc = "Code actions (CodeLens)" })
 
 	vim.api.nvim_create_autocmd("CursorHold", {
 		buffer = bufnr,
@@ -61,15 +65,17 @@ M.on_attach = function(client, bufnr)
 		end,
 	})
 
-	vim.diagnostic.config({
+	dg.config({
 		virtual_text = false,
 		underline = true,
 		update_in_insert = false,
 	})
+
 	vim.lsp.handlers["textDocument/hover"] =
 		vim.lsp.with(vim.lsp.handlers.hover, {
 			border = "rounded",
 		})
+
 	local original_vim_ui_select = vim.ui.select
 	---@diagnostic disable-next-line: duplicate-set-field
 	vim.ui.select = function(items, select_opts, on_choice)
@@ -95,7 +101,9 @@ M.on_attach = function(client, bufnr)
 	end
 
 	vim.o.updatetime = 1000
-
+	if client.server_capabilities.inlayHintProvider then
+		vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+	end
 	-- client.server_capabilities.semanticTokensProvider = nil
 end
 
