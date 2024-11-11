@@ -17,6 +17,7 @@ rm -rf  ~/.local/share/nvim | ~/.local/state/nvim | rm -rf ~/.config/nvim  |  mv
 ![imagen](https://github.com/krovuxdev/NeoClean/assets/62192487/303ef009-bd75-4be8-9a7c-410a6e60af43)
 -->
 
+# KEYBINDINGS
 | KEY | DESC |
 |---|---|
 | space+? | GUIA KEYMAP  |
