@@ -1,3 +1,3 @@
 Archived. Migrated to:
-- codeberg https://gitlab.com/krovuxdev/NeoClean 
-- gitlab https://codeberg.org/krovuxdev/NeoClean
+- gitlab https://gitlab.com/krovuxdev/NeoClean 
+- codeberg https://codeberg.org/krovuxdev/NeoClean
